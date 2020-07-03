@@ -1,83 +1,78 @@
 #include "ft_printf.h"
 
-int		ft_putchar(char c, int end)
+static	void	ft_acc_str(int len, char *str)
 {
-	static int i = 0;
-	if (end == 0)
-		return (i);
-	write(1, &c, 1);
-	i++;
-	return (i);
-}
-
-void		ft_putstr(char *s)
-{
-	int i;
-
-	i = 0;
-	if (s == NULL)
-		return ;
-	while (s[i] != '\0')
+	//if (s_flags.acc < len && s_flags.acc > s_flags.width)
+	s_flags.width = s_flags.width - s_flags.acc;
+	if (s_flags.minus == 0)
 	{
-		ft_putchar(s[i], 1);
-		i++;
-	}
-}
-
-void    ft_puthex(char c, long long int nb)
-{
-	char *str;
-	int remainder[20];
-	int i;
-
-	i = 0;
-	str = "0123456789abcdef";
-	while (nb > 16)
+		while (s_flags.width-- > 0)
+			ft_putchar(' ', 1);
+		ft_putstr(str, s_flags.acc);
+	}               
+	else if (s_flags.minus == 1)
 	{
-		remainder[i] = nb % 16;	
-		nb = nb / 16;
-		i++;
-	}
-	if (c != 'x')
-	{
-		ft_putchar(ft_toupper(str[nb]), 1);
-		while (i-- > 0)
-			ft_putchar(ft_toupper(str[remainder[i]]), 1);
+		ft_putstr(str, s_flags.acc);
+		while (s_flags.width-- > 0)
+			ft_putchar(' ', 1);
 	}
 	else
-	{
-		ft_putchar(str[nb], 1);
-		while (i-- > 0)
-			ft_putchar(str[remainder[i]], 1);
-	}		
+		ft_putstr(str, s_flags.acc);
 }
-// void   ft_str_hex(const char *ptr, int *index, va_list ap)
-// {
-//     if (ptr[*index] == 'c')
-//     {
-//         ft_putchar(va_arg(ap, int), 1);
-//         *index++;
-//     }
-//     else if (ptr[*index] == 's')
-//     {
-//         ft_putstr(va_arg(ap, char*));
-//         *index++;
-//     }
-//     else if (ptr[*index] == 'x')
-//     {
-//         ft_puthex(va_arg(ap, unsigned int), 'x');
-//         *index++;
-//     }
-//     else if (ptr[*index] == 'X')
-//     {
-//         ft_puthex(va_arg(ap, unsigned int), 'X');
-//         *index++;
-//     }
-//     else if (ptr[*index] == 'p')
-//     {
-// 		ft_putstr("ox");
-//         ft_puthex(va_arg(ap, unsigned long), 'x');
-//         *index++;
-//     }
-// }
 
+static	void			ft_width_str(int len, char *str)
+{
+	if (s_flags.width < 0)
+	{
+		s_flags.width *= -1;
+		s_flags.minus = 1;
+	}
+	s_flags.width = (s_flags.width > len  && s_flags.dot != 1)? s_flags.width - len : s_flags.width;
+	if (s_flags.dot == 1 && s_flags.acc < len)
+		ft_acc_str(len, str);
+	else if (s_flags.minus != 1)
+	{
+		while (s_flags.width-- > 0)
+			ft_putchar(' ', 1);
+		ft_putstr(str, len);
+	}
+	else if (s_flags.minus == 1)
+	{
+		ft_putstr(str, len);
+		while (s_flags.width-- > 0)
+			ft_putchar(' ', 1);
+	}
+}
+
+void   ft_str(const char *ptr, int index, va_list ap)
+{
+	char *str;
+	char c;
+	int len;
+
+	if (ptr[index] == 'c')
+        c = va_arg(ap, int);
+    if (ptr[index] == 's')
+        str = va_arg(ap, char*);
+	if (ptr[index] == 's' && str == NULL)
+		str = "(null)";
+	len = ft_strlen(str);
+	if (ptr[index] == 's')
+	{
+		if (s_flags.width != 0)
+			ft_width_str(len, str);
+		else if (s_flags.acc != 0)
+			ft_acc_str(len, str);
+		else
+			ft_putstr(str, len);
+	}
+	else if (ptr[index] == 'c')
+	{
+		if (s_flags.width != 0)
+			ft_width_str(len, "ss");
+		else
+			ft_putchar(c, 1);
+	}
+}
+
+//email = ndreadno@ga-p1.msk.21-school.ru

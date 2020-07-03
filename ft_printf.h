@@ -1,17 +1,32 @@
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# include <stdlib.h>
 # include <unistd.h>
+# include <string.h>
 # include <stdarg.h>
 
-int		ft_tolower(int ch);
+struct s_struct
+{
+	int zero;
+	int minus;
+	int width;
+	int acc;
+	int dot;
+}	s_flags;
+
+size_t	ft_strlen(const char *str);
 int		ft_toupper(int ch);
-int		ft_putchar(char c, int end);
-void	ft_putstr(char *s);
+int		ft_putchar(const char c, int end);
+int		ft_atoi(const char *str, int * index);
+void	ft_putstr(char *s, size_t len);
 void	ft_putnbr(long long int n);
-void    ft_puthex(char c, long long int nb);
-void	ft_nbr(const char *ptr, int *index, va_list ap);
-void   ft_str_hex(const char *ptr, int *index, va_list ap);
+void	ft_print(void *var, char flag);
+void	ft_acc_y(int len, void *var, char flag);
+void	ft_width_y(int len, void *var, char flag);
+void	ft_nbr(const char *ptr, int index, va_list ap);
+void	ft_str(const char *ptr, int index, va_list ap);
+void	ft_flags(const char *ptr, int *index, va_list ap);
+void    ft_puthex(char flag_c, char flag_p, unsigned long int nb);
+void	ft_print_hex_pointer(const char *ptr, int index, va_list ap);
 
 #endif
