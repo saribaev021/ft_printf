@@ -6,11 +6,11 @@
 /*   By: ndreadno <ndreadno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 12:45:00 by ndreadno          #+#    #+#             */
-/*   Updated: 2020/07/02 20:05:51 by ndreadno         ###   ########.fr       */
+/*   Updated: 2020/07/06 14:01:47 by ndreadno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "header/ft_printf.h"
 
 size_t	ft_strlen(const char *str)
 {
@@ -80,4 +80,26 @@ void    ft_puthex(char flag_c, char flag_p, unsigned long int nb)
 	ft_putchar(str[nb], 1);
 	while (i-- > 0)
 		ft_putchar(str[remainder[i]], 1);		
+}
+
+void			ft_putnbr(long long int n)
+{
+	unsigned long long int nb;
+
+	if (n >= 10)
+	{
+		ft_putnbr(n / 10);
+		ft_putchar(n % 10 + '0', 1);
+	}
+	else if (n < 0)
+	{
+		nb = (unsigned long long int)-n;
+		ft_putchar('-', 1);
+		ft_putnbr(nb);
+	}
+	else
+	{
+		ft_putchar(n % 10 + 48, 1);
+	}
+
 }
