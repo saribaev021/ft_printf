@@ -6,13 +6,13 @@
 /*   By: ndreadno <ndreadno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/09 11:57:34 by ndreadno          #+#    #+#             */
-/*   Updated: 2020/07/06 14:04:41 by ndreadno         ###   ########.fr       */
+/*   Updated: 2020/07/09 23:32:39 by ndreadno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header/ft_printf.h"
+#include "../header/ft_printf.h"
 
-static	int	ft_checksp(const char *str, int index)
+static int		ft_checksp(const char *str, int index)
 {
 	while (str[index] == ' ' || str[index] == '\t' || str[index] == '\v' ||
 	str[index] == '\f' || str[index] == '\r' || str[index] == '\n')
@@ -20,7 +20,7 @@ static	int	ft_checksp(const char *str, int index)
 	return (index);
 }
 
-static	int		ft_conv(const char *str, int *index, int l)
+static int		ft_conv(const char *str, int *index, int l)
 {
 	int res;
 	int k;
@@ -65,8 +65,8 @@ int				ft_atoi(const char *str, int *index)
 		res = res * -1;
 	if (str[*index] == '.')
 	{
-		s_flags.dot = 1;
+		s_fg.dot = 1;
 		(*index)++;
-	}	
+	}
 	return (res);
 }

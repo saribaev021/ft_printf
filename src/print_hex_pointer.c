@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_hex_pointer.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ndreadno <ndreadno@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/08 12:55:22 by ndreadno          #+#    #+#             */
+/*   Updated: 2020/07/09 23:32:30 by ndreadno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "header/ft_printf.h"
+#include "../header/ft_printf.h"
 
-unsigned long int ft_len_xex(unsigned long int nb)
+static unsigned long int	ft_len_xex(unsigned long int nb)
 {
 	int i;
 
@@ -14,33 +25,38 @@ unsigned long int ft_len_xex(unsigned long int nb)
 	return (i + 1);
 }
 
-void	ft_print_hex_pointer(const char *ptr, int index, va_list ap)
+static void					spec_p(unsigned long x, int len)
 {
-	unsigned long int x;
-	int len;
+	if (s_fg.wid != 0)
+		ft_width_y(len + 2, &x, 'p');
+	else if (s_fg.acc != 0 && s_fg.acc > len)
+		ft_acc_y(len + 2, 0, &x, 'p');
+	else
+		ft_puthex('x', 'p', x);
+}
+
+void						ft_h_p(const char *ptr, int index, va_list ap)
+{
+	unsigned long int	x;
+	int					len;
 
 	x = 0;
 	if (ptr[index] == 'x' || ptr[index] == 'X')
-        x = va_arg(ap, unsigned int);
-    if (ptr[index] == 'p')
-        x = va_arg(ap, unsigned long int);
+		x = va_arg(ap, unsigned int);
+	if (ptr[index] == 'p')
+		x = va_arg(ap, unsigned long int);
 	len = ft_len_xex(x);
-	if (ptr[index] == 'x')
+	if (ptr[index] == 'x' || ptr[index] == 'X')
 	{
-		if (s_flags.width != 0)
+		if (s_fg.wid != 0)
 			ft_width_y(len, &x, ptr[index]);
-		else if (s_flags.acc != 0 && s_flags.acc > len)
-			ft_acc_y(len, &x, ptr[index]);
+		else if (s_fg.acc != 0 && s_fg.acc > len)
+			ft_acc_y(len, 0, &x, ptr[index]);
+		else if (s_fg.dot == 1 && s_fg.acc == 0)
+			return ;
 		else
 			ft_puthex(ptr[index], 'x', x);
 	}
 	if (ptr[index] == 'p')
-	{
-		if (s_flags.width != 0)
-			ft_width_y(len + 2, &x, 'p');
-		else if (s_flags.acc != 0 && s_flags.acc > len)
-			ft_acc_y(len + 2, &x, 'p');
-		else
-			ft_puthex('x', 'p', x);
-	}
+		spec_p(x, len);
 }
